@@ -1,0 +1,14 @@
+{
+  "name": "@dylibso/xtp-test",
+  "version": "0.0.1",
+  "description": "XTP test harness",
+  "main": "index.ts",
+  "scripts": {
+    "check": "tsc index.ts --noEmit"
+  },
+  "author": "Dylibso <support@dylibso.com>",
+  "license": "BSD-3-Clause",
+  "dependencies": {
+    "typescript": "^5.4.3"
+  }
+}
