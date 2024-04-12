@@ -135,6 +135,8 @@ declare module "xtp:test" {
     assert(name: PTR, value: I64): void;
     call(func: PTR, input: PTR): PTR;
     time(func: PTR, input: PTR): I64;
+    group(name: PTR);
+    reset();
   }
 }
 ```
