@@ -7,7 +7,7 @@ on:
 
 jobs:
   build_and_publish:
-    runs-on: ubunutu-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: denoland/setup-deno@v1

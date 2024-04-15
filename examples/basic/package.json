@@ -4,7 +4,7 @@
   "description": "",
   "main": "test.js",
   "scripts": {
-    "build": "node esbuild.js && make build"
+    "build": "node esbuild.js && extism-js dist/index.js -i test.d.ts -o test.wasm"
   },
   "author": "",
   "license": "ISC",

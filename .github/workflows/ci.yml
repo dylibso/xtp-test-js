@@ -1,0 +1,32 @@
+name: CI
+on: [pull_request, workflow_dispatch]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+
+      - name: Install XTP CLI
+        run: curl https://static.dylibso.com/cli/install.sh | sudo sh
+
+      - name: Install Extism js-pdk
+        run: |
+          curl -O https://raw.githubusercontent.com/extism/js-pdk/main/install.sh
+          sudo sh install.sh
+
+      - name: Check
+        run: |
+          npm i
+          npm run check
+
+      - name: Build example
+        run: cd examples/basic && npm i && npm run build
+
+      - name: Test example
+        run: xtp plugin test https://raw.githubusercontent.com/extism/extism/main/wasm/code.wasm --with examples/basic/test.wasm                  
+      
