@@ -3,7 +3,7 @@ on: [pull_request, workflow_dispatch]
 
 jobs:
   test:
-    runs-on: ubunutu-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         
