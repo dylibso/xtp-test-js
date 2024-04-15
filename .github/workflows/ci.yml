@@ -25,7 +25,7 @@ jobs:
           npm run check
 
       - name: Build example
-        run: cd examples/basic && npm run build
+        run: cd examples/basic && npm i && npm run build
 
       - name: Test example
         run: xtp plugin test https://raw.githubusercontent.com/extism/extism/main/wasm/code.wasm --with examples/basic/test.wasm                  
