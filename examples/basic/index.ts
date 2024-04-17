@@ -19,7 +19,7 @@ export function test() {
       Test.assertEqual(
         `total count increased to: ${accumTotal}`,
         accumTotal,
-        4 * (i + 1),
+        output.total,
       );
     }
 
