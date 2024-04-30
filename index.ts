@@ -106,18 +106,25 @@ export class Test {
     return Test.call(funcName, input).readBuffer();
   }
 
-  static assert(msg: string, value: boolean) {
+  static assert(name: string, value: boolean, reason: string) {
     // @ts-ignore: Memory
-    const a = Memory.fromString(msg);
-    assert(a.offset, !!value);
+    const a = Memory.fromString(name);
+    // @ts-ignore: Memory
+    const b = Memory.fromString(reason);
+    assert(a.offset, !!value, b.offset);
     a.free();
+    b.free();
   }
 
   static assertEqual(msg: string, x: unknown, y: unknown) {
-    Test.assert(msg, x === y);
+    const stack = new Error().stack;
+    stack.trim();
+    Test.assert(msg, x === y, `Expected ${x} === ${y}\n${stack}`);
   }
 
   static assertNotEqual(msg: string, x: unknown, y: unknown) {
-    Test.assert(msg, x !== y);
+    const stack = new Error().stack;
+    stack.trim();
+    Test.assert(msg, x !== y, `Expected ${x} !== ${y}\n${stack}`);
   }
 }
