@@ -127,14 +127,14 @@ export class Test {
 
   // assert that `x` and `y` are equal, naming the assertion with `msg`, which will be used as a label in the CLI runner.
   static assertEqual(msg: string, x: unknown, y: unknown) {
-    const stack = new Error().stack;
+    const stack = new Error().stack || "";
     stack.trim();
     Test.assert(msg, x === y, `Expected ${x} === ${y}\n${stack}`);
   }
 
   // assert that `x` and `y` are not equal, naming the assertion with `msg`, which will be used as a label in the CLI runner.
   static assertNotEqual(msg: string, x: unknown, y: unknown) {
-    const stack = new Error().stack;
+    const stack = new Error().stack || "";
     stack.trim();
     Test.assert(msg, x !== y, `Expected ${x} !== ${y}\n${stack}`);
   }
