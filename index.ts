@@ -46,6 +46,7 @@ function convertInput(input: Input): MemoryHandle {
 }
 
 export class Test {
+  // call a function from the Extism plugin being tested, passing in `Input` and returning the output as a raw `MemoryHandle`.
   static call(
     funcName: string,
     input: Input,
@@ -60,6 +61,7 @@ export class Test {
     return Memory.find(c);
   }
 
+  // call a function from the Extism plugin being tested, passing in `Input` and get the number of nanoseconds spent in the function.
   static timeNanoseconds(funcName: string, input: Input): number {
     // @ts-ignore: Memory
     const a = Memory.fromString(funcName);
@@ -70,6 +72,7 @@ export class Test {
     return c;
   }
 
+  // Reset the loaded plugin, clearing all state.
   static reset() {
     reset();
   }
@@ -81,6 +84,7 @@ export class Test {
     nameMem.free();
   }
 
+  // Run a test group, resetting the plugin before and after the group is run.
   static group(name: string, callback: () => void) {
     Test.reset();
     Test.startGroup(name);
@@ -88,10 +92,12 @@ export class Test {
     Test.reset();
   }
 
+  // call a function from the Extism plugin being tested, passing in `Input` and get the number of seconds spent in the function.
   static timeSeconds(funcName: string, input: Input): number {
     return Test.timeNanoseconds(funcName, input) / 1e9;
   }
 
+  // call a function from the Extism plugin being tested, passing in `Input` and returning the output as a `string`.
   static callString(
     funcName: string,
     input: Input,
@@ -99,6 +105,7 @@ export class Test {
     return Test.call(funcName, input).readString();
   }
 
+  // call a function from the Extism plugin being tested, passing in `Input` and returning the output as a `ArrayBuffer`.
   static callBuffer(
     funcName: string,
     input: Input,
@@ -106,22 +113,26 @@ export class Test {
     return Test.call(funcName, input).readBuffer();
   }
 
-  static assert(name: string, value: boolean, reason: string) {
+  // assert that the `outcome` is true, naming the assertion with `name`, which will be used as a label in the CLI runner. The `reason` argument
+  // will be used to print a message when the assertion fails, this should contain some additional information about values being compared.
+  static assert(name: string, outcome: boolean, reason: string) {
     // @ts-ignore: Memory
     const a = Memory.fromString(name);
     // @ts-ignore: Memory
     const b = Memory.fromString(reason);
-    assert(a.offset, !!value, b.offset);
+    assert(a.offset, !!outcome, b.offset);
     a.free();
     b.free();
   }
 
+  // assert that `x` and `y` are equal, naming the assertion with `msg`, which will be used as a label in the CLI runner.
   static assertEqual(msg: string, x: unknown, y: unknown) {
     const stack = new Error().stack;
     stack.trim();
     Test.assert(msg, x === y, `Expected ${x} === ${y}\n${stack}`);
   }
 
+  // assert that `x` and `y` are not equal, naming the assertion with `msg`, which will be used as a label in the CLI runner.
   static assertNotEqual(msg: string, x: unknown, y: unknown) {
     const stack = new Error().stack;
     stack.trim();

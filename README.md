@@ -92,8 +92,9 @@ export class Test {
   // call a function from the Extism plugin being tested, passing in `Input` and get the number of seconds spent in the function.
   static timeSeconds(funcName: string, input: Input): number { ... }
 
-  // assert that the `value` is true, naming the assertion with `msg`, which will be used as a label in the CLI runner.
-  static assert(msg: string, value: boolean) { ... }
+  // assert that the `outcome` is true, naming the assertion with `name`, which will be used as a label in the CLI runner. The `reason` argument
+  // will be used to print a message when the assertion fails, this should contain some additional information about values being compared.
+  static assert(name: string, outcome: boolean, reason: string) { ... }
 
   // assert that `x` and `y` are equal, naming the assertion with `msg`, which will be used as a label in the CLI runner.
   static assertEqual(msg: string, x: unknown, y: unknown) { ... }
