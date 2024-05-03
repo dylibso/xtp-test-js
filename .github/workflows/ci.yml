@@ -14,6 +14,9 @@ jobs:
       - name: Install XTP CLI
         run: curl https://static.dylibso.com/cli/install.sh | sudo sh
 
+      - name: Check XTP CLI version
+        run: xtp -v
+
       - name: Install Extism js-pdk
         run: |
           curl -O https://raw.githubusercontent.com/extism/js-pdk/main/install.sh
