@@ -16,7 +16,7 @@ jobs:
       
       - name: Build @dylibso/xtp-test
         run: |
-          make build-npm ${{ github.ref }}
+          make build-npm tag=${{ github.ref_name }}
         
       - uses: actions/setup-node@v4
         with:
