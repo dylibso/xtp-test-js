@@ -138,4 +138,32 @@ export class Test {
     stack.trim();
     Test.assert(msg, x !== y, `Expected ${x} !== ${y}\n${stack}`);
   }
+
+  // assert that `x` is greater than `y`, naming the assertion with `msg`, which will be used as a label in the CLI runner.
+  static assertGreaterThan(msg: string, x: any, y: any) {
+    const stack = new Error().stack || "";
+    stack.trim();
+    Test.assert(msg, x > y, `Expected ${x} > ${y}\n${stack}`);
+  }
+
+  // assert that `x` is greater than or equal to `y`, naming the assertion with `msg`, which will be used as a label in the CLI runner.
+  static assertGreaterThanOrEqualTo(msg: string, x: any, y: any) {
+    const stack = new Error().stack || "";
+    stack.trim();
+    Test.assert(msg, x >= y, `Expected ${x} >= ${y}\n${stack}`);
+  }
+
+  // assert that `x` is less than `y`, naming the assertion with `msg`, which will be used as a label in the CLI runner.
+  static assertLessThan(msg: string, x: any, y: any) {
+    const stack = new Error().stack || "";
+    stack.trim();
+    Test.assert(msg, x < y, `Expected ${x} < ${y}\n${stack}`);
+  }
+
+  // assert that `x` is less than or equal to `y`, naming the assertion with `msg`, which will be used as a label in the CLI runner.
+  static assertLessThanOrEqualTo(msg: string, x: any, y: any) {
+    const stack = new Error().stack || "";
+    stack.trim();
+    Test.assert(msg, x <= y, `Expected ${x} <= ${y}\n${stack}`);
+  }
 }

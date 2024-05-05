@@ -4,10 +4,10 @@ declare module "main" {
 
 declare module "xtp:test" {
   interface harness {
-    assert(name: PTR, value: I64, reason: PTR);
+    assert(name: PTR, value: I64, reason: PTR): void;
     call(func: PTR, input: PTR): PTR;
     time(func: PTR, input: PTR): I64;
-    group(name: PTR);
-    reset();
+    group(name: PTR): void;
+    reset(): void;
   }
 }

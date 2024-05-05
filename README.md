@@ -46,25 +46,6 @@ export function test() {
 
 ## API Docs
 
-`Input` is a type to represent various kinds of function call input data.
-
-```ts
-type Input = string | ArrayBuffer | object;
-```
-
-`MemoryHandle` is a low-level interface to Extism memory. Most times you'll use
-a helper function to work at a higher level.
-
-```ts
-interface MemoryHandle {
-  offset: number;
-  length: number;
-  free(): void;
-  readBuffer(): ArrayBuffer;
-  readString(): string;
-}
-```
-
 `Test` is the primary entrypoint to this library. It exposes plugin calling
 functions and timing & assetion functions to validate expectations of plugin
 behavior.
@@ -101,6 +82,37 @@ export class Test {
   
   // assert that `x` and `y` are not equal, naming the assertion with `msg`, which will be used as a label in the CLI runner.
   static assertNotEqual(msg: string, x: unknown, y: unknown) { ... }
+
+  // assert that `x` is greater than `y`, naming the assertion with `msg`, which will be used as a label in the CLI runner.
+  static assertGreaterThan(msg: string, x: any, y: any) { ... }
+
+  // assert that `x` is greater than or equal to `y`, naming the assertion with `msg`, which will be used as a label in the CLI runner.
+  static assertGreaterThanOrEqualTo(msg: string, x: any, y: any) { ... }
+  
+  // assert that `x` is less than `y`, naming the assertion with `msg`, which will be used as a label in the CLI runner.
+  static assertLessThan(msg: string, x: any, y: any) { ... }
+  
+  // assert that `x` is less than or equal to `y`, naming the assertion with `msg`, which will be used as a label in the CLI runner.
+  static assertLessThanOrEqualTo(msg: string, x: any, y: any) { ... }
+}
+```
+
+`Input` is a type to represent various kinds of function call input data.
+
+```ts
+type Input = string | ArrayBuffer | object;
+```
+
+`MemoryHandle` is a low-level interface to Extism memory. Most times you'll use
+a helper function to work at a higher level.
+
+```ts
+interface MemoryHandle {
+  offset: number;
+  length: number;
+  free(): void;
+  readBuffer(): ArrayBuffer;
+  readString(): string;
 }
 ```
 
@@ -133,11 +145,11 @@ declare module "main" {
 
 declare module "xtp:test" {
   interface harness {
-    assert(name: PTR, value: I64, reason: PTR);
+    assert(name: PTR, value: I64, reason: PTR): void;
     call(func: PTR, input: PTR): PTR;
     time(func: PTR, input: PTR): I64;
-    group(name: PTR);
-    reset();
+    group(name: PTR): void;
+    reset(): void;
   }
 }
 ```
@@ -178,9 +190,9 @@ curl https://static.dylibso.com/cli/install.sh | sudo sh
 ### Run the test suite
 
 ```sh
-xtp plugin test ./plugin-*.wasm --with test.wasm --host host.wasm
-#               ^^^^^^^^^^^^^^^        ^^^^^^^^^        ^^^^^^^^^
-#               your plugin(s)         test to run      optional mock host functions
+xtp plugin test ./plugin-*.wasm --with test.wasm --mock-host host.wasm
+#               ^^^^^^^^^^^^^^^        ^^^^^^^^^             ^^^^^^^^^
+#               your plugin(s)         test to run           optional mock host functions
 ```
 
 **Note:** The optional mock host functions must be implemented as Extism
