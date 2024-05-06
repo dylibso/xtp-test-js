@@ -127,15 +127,38 @@ export class Test {
 
   // assert that `x` and `y` are equal, naming the assertion with `msg`, which will be used as a label in the CLI runner.
   static assertEqual(msg: string, x: unknown, y: unknown) {
-    const stack = new Error().stack || "";
-    stack.trim();
-    Test.assert(msg, x === y, `Expected ${x} === ${y}\n${stack}`);
+    Test.assert(msg, x === y, `Expected ${x} === ${y}\n${stack()}`);
   }
 
   // assert that `x` and `y` are not equal, naming the assertion with `msg`, which will be used as a label in the CLI runner.
   static assertNotEqual(msg: string, x: unknown, y: unknown) {
-    const stack = new Error().stack || "";
-    stack.trim();
-    Test.assert(msg, x !== y, `Expected ${x} !== ${y}\n${stack}`);
+    Test.assert(msg, x !== y, `Expected ${x} !== ${y}\n${stack()}`);
+  }
+
+  // assert that `x` is greater than `y`, naming the assertion with `msg`, which will be used as a label in the CLI runner.
+  static assertGreaterThan(msg: string, x: any, y: any) {
+    Test.assert(msg, x > y, `Expected ${x} > ${y}\n${stack()}`);
+  }
+
+  // assert that `x` is greater than or equal to `y`, naming the assertion with `msg`, which will be used as a label in the CLI runner.
+  static assertGreaterThanOrEqualTo(msg: string, x: any, y: any) {
+    Test.assert(msg, x >= y, `Expected ${x} >= ${y}\n${stack()}`);
+  }
+
+  // assert that `x` is less than `y`, naming the assertion with `msg`, which will be used as a label in the CLI runner.
+  static assertLessThan(msg: string, x: any, y: any) {
+    Test.assert(msg, x < y, `Expected ${x} < ${y}\n${stack()}`);
+  }
+
+  // assert that `x` is less than or equal to `y`, naming the assertion with `msg`, which will be used as a label in the CLI runner.
+  static assertLessThanOrEqualTo(msg: string, x: any, y: any) {
+    Test.assert(msg, x <= y, `Expected ${x} <= ${y}\n${stack()}`);
   }
 }
+
+const stack = (): string => {
+  let stack = new Error().stack || "";
+  stack.trim();
+  stack = stack.split("\n").slice(1).join("\n");
+  return stack;
+};

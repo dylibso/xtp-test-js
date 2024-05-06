@@ -1,6 +1,11 @@
 import { Test } from "../../index.ts";
 
 export function test() {
+  Test.assertGreaterThan("gt test", 100, 1);
+  Test.assertLessThan("lt test", Number.MIN_VALUE, Number.MAX_VALUE);
+  Test.assertGreaterThanOrEqualTo("gte test", Math.PI, 3.14);
+  Test.assertLessThanOrEqualTo("lte test", 3.14, Math.PI);
+
   // call a function from some Extism plugin (you'll link these up in the CLI command to run the test),
   // passing in some data and getting back a string (`callString` is a helper for string output)
   const res = Test.callString("count_vowels", "some input");
