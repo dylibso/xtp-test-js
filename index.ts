@@ -65,6 +65,11 @@ export class Test {
   // this input is defined in an xtp.toml file, or by the --mock-input-data or --mock-input-file flags.
   static mockInput(): MemoryHandle {
     const offset = mock_input();
+    if (offset === 0) {
+      throw new Error(
+        "Failed to fetch mock input, not provided by test runner.",
+      );
+    }
     // @ts-ignore: Memory
     return Memory.find(offset);
   }
