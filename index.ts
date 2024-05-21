@@ -72,13 +72,19 @@ export class Test {
   // read the mock test input provided by the test runner, returns an `ArrayBuffer`.
   // this input is defined in an xtp.toml file, or by the --mock-input-data or --mock-input-file flags.
   static mockInputBuffer(): ArrayBuffer {
-    return Test.mockInput().readBuffer();
+    const inputMem = Test.mockInput();
+    const buf = inputMem.readBuffer();
+    inputMem.free();
+    return buf;
   }
 
   // read the mock test input provided by the test runner, returns an `string`.
   // this input is defined in an xtp.toml file, or by the --mock-input-data or --mock-input-file flags.
   static mockInputString(): string {
-    return Test.mockInput().readString();
+    const inputMem = Test.mockInput();
+    const str = inputMem.readString();
+    inputMem.free();
+    return str;
   }
 
   // call a function from the Extism plugin being tested, passing in `Input` and get the number of nanoseconds spent in the function.
