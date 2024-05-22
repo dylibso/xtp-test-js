@@ -61,6 +61,18 @@ export class Test {
   // call a function from the Extism plugin being tested, passing in `Input` and returning the output as a `ArrayBuffer`.
   static callBuffer(funcName: string, input: Input): ArrayBuffer { ... }
 
+  // read the mock test input provided by the test runner, returns a `MemoryHandle`.
+  // this input is defined in an xtp.toml file, or by the --mock-input-data or --mock-input-file flags.
+  static mockInput(): MemoryHandle { ... }
+  
+  // read the mock test input provided by the test runner, returns an `ArrayBuffer`.
+  // this input is defined in an xtp.toml file, or by the --mock-input-data or --mock-input-file flags.
+  static mockInputBuffer(): ArrayBuffer { ... }
+  
+  // read the mock test input provided by the test runner, returns an `string`.
+  // this input is defined in an xtp.toml file, or by the --mock-input-data or --mock-input-file flags.
+  static mockInputString(): string { ... }
+
   // Run a test group, resetting the plugin before and after the group is run.
   static group(name: string, callback: () => void) { .. }
 
@@ -150,6 +162,7 @@ declare module "xtp:test" {
     time(func: PTR, input: PTR): I64;
     group(name: PTR): void;
     reset(): void;
+    mock_input(): PTR;
   }
 }
 ```

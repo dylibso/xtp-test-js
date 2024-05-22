@@ -1,0 +1,11 @@
+[[test]]
+name = "basic"
+build = "cd examples/basic && npm run build"
+with = "examples/basic/test.wasm"
+mock_input = { data = "this is my mock input data" }
+
+[[test]]
+name = "basic - file input"
+build = "cd examples/basic && npm run build"
+with = "examples/basic/test.wasm"
+mock_input = { file = "examples/basic/index.ts" }

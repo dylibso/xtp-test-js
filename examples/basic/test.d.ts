@@ -9,5 +9,6 @@ declare module "xtp:test" {
     time(func: PTR, input: PTR): I64;
     group(name: PTR): void;
     reset(): void;
+    mock_input(): PTR;
   }
 }

@@ -1,6 +1,9 @@
 import { Test } from "../../index.ts";
 
 export function test() {
+  const notEmpty = Test.callString("count_vowels", Test.mockInputString());
+  Test.assertNotEqual("with mock, not empty", notEmpty, "");
+
   Test.assertGreaterThan("gt test", 100, 1);
   Test.assertLessThan("lt test", Number.MIN_VALUE, Number.MAX_VALUE);
   Test.assertGreaterThanOrEqualTo("gte test", Math.PI, 3.14);

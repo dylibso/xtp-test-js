@@ -6,7 +6,7 @@ declare const Host: {
 };
 
 // @ts-ignore
-const { call, time, assert, group, reset } = Host.getFunctions();
+const { call, time, assert, group, reset, mock_input } = Host.getFunctions();
 
 interface MemoryHandle {
   offset: number;
@@ -59,6 +59,37 @@ export class Test {
     b.free();
     // @ts-ignore: Memory
     return Memory.find(c);
+  }
+
+  // read the mock test input provided by the test runner, returns a `MemoryHandle`.
+  // this input is defined in an xtp.toml file, or by the --mock-input-data or --mock-input-file flags.
+  static mockInput(): MemoryHandle {
+    const offset = mock_input();
+    if (offset === 0) {
+      throw new Error(
+        "Failed to fetch mock input, not provided by test runner.",
+      );
+    }
+    // @ts-ignore: Memory
+    return Memory.find(offset);
+  }
+
+  // read the mock test input provided by the test runner, returns an `ArrayBuffer`.
+  // this input is defined in an xtp.toml file, or by the --mock-input-data or --mock-input-file flags.
+  static mockInputBuffer(): ArrayBuffer {
+    const inputMem = Test.mockInput();
+    const buf = inputMem.readBuffer();
+    inputMem.free();
+    return buf;
+  }
+
+  // read the mock test input provided by the test runner, returns an `string`.
+  // this input is defined in an xtp.toml file, or by the --mock-input-data or --mock-input-file flags.
+  static mockInputString(): string {
+    const inputMem = Test.mockInput();
+    const str = inputMem.readString();
+    inputMem.free();
+    return str;
   }
 
   // call a function from the Extism plugin being tested, passing in `Input` and get the number of nanoseconds spent in the function.
