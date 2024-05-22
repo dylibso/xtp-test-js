@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@dylibso/xtp-test": "0.0.1-rc",
+    "@dylibso/xtp-test": "0.0.1",
     "esbuild": "^0.20.2"
   }
 }

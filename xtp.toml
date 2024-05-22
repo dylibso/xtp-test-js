@@ -1,3 +1,5 @@
+bin = "https://raw.githubusercontent.com/extism/extism/main/wasm/code.wasm"
+
 [[test]]
 name = "basic"
 build = "cd examples/basic && npm run build"
