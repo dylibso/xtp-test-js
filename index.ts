@@ -1,3 +1,5 @@
+import "@extism/js-pdk"
+
 declare const Host: {
   inputBytes: () => void;
   inputString: () => void;
