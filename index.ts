@@ -8,23 +8,15 @@ declare const Host: {
 // @ts-ignore
 const { call, time, assert, group, reset, mock_input } = Host.getFunctions();
 
-interface MemoryHandle {
-  offset: number;
-  length: number;
-  free(): void;
-  readBuffer(): ArrayBuffer;
-  readString(): string;
-}
-
 type Input = string | ArrayBuffer | object;
 
-Host.inputBytes = function () {
+Host.inputBytes = function() {
   throw "Tests do not accept any input";
 };
 
 Host.inputString = Host.inputBytes;
 
-Host.outputBytes = function (n: any) {
+Host.outputBytes = function(n: any) {
   throw "Tests should not return any output";
 };
 
@@ -78,7 +70,7 @@ export class Test {
   // this input is defined in an xtp.toml file, or by the --mock-input-data or --mock-input-file flags.
   static mockInputBuffer(): ArrayBuffer {
     const inputMem = Test.mockInput();
-    const buf = inputMem.readBuffer();
+    const buf = inputMem.readBytes();
     inputMem.free();
     return buf;
   }
@@ -141,7 +133,7 @@ export class Test {
     funcName: string,
     input: Input,
   ): ArrayBuffer {
-    return Test.call(funcName, input).readBuffer();
+    return Test.call(funcName, input).readBytes();
   }
 
   // assert that the `outcome` is true, naming the assertion with `name`, which will be used as a label in the CLI runner. The `reason` argument
