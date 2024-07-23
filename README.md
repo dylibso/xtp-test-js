@@ -123,7 +123,7 @@ interface MemoryHandle {
   offset: number;
   length: number;
   free(): void;
-  readBuffer(): ArrayBuffer;
+  readBytes(): ArrayBuffer;
   readString(): string;
 }
 ```
