@@ -12,7 +12,7 @@ interface MemoryHandle {
   offset: number;
   length: number;
   free(): void;
-  readBuffer(): ArrayBuffer;
+  readBytes(): ArrayBuffer;
   readString(): string;
 }
 
@@ -78,7 +78,7 @@ export class Test {
   // this input is defined in an xtp.toml file, or by the --mock-input-data or --mock-input-file flags.
   static mockInputBuffer(): ArrayBuffer {
     const inputMem = Test.mockInput();
-    const buf = inputMem.readBuffer();
+    const buf = inputMem.readBytes();
     inputMem.free();
     return buf;
   }
@@ -141,7 +141,7 @@ export class Test {
     funcName: string,
     input: Input,
   ): ArrayBuffer {
-    return Test.call(funcName, input).readBuffer();
+    return Test.call(funcName, input).readBytes();
   }
 
   // assert that the `outcome` is true, naming the assertion with `name`, which will be used as a label in the CLI runner. The `reason` argument
