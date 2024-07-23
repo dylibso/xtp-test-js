@@ -43,6 +43,15 @@ export function test() {
   const total = JSON.parse(resetOutput)["total"];
   Test.assertEqual("reset plugin has vars cleared", total, 4);
 
+  // test using the memory handle readBytes method
+  const memOutput = Test.call("count_vowels", "hello, world");
+  const outputBytes = memOutput.readBytes();
+  Test.assertEqual(
+    "bytes from output are expected length",
+    outputBytes.byteLength,
+    43,
+  );
+
   // this function is also an Extism plugin, so return an int32 value (non-zero returns will cause the whole test suite to fail.)
   return 0;
 }
