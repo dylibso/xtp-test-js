@@ -4,7 +4,7 @@
   "description": "XTP test harness",
   "main": "index.ts",
   "scripts": {
-    "check": "tsc index.ts --noEmit"
+    "check": "tsc index.ts --noEmit --target es6"
   },
   "author": "Dylibso <support@dylibso.com>",
   "license": "BSD-3-Clause",
