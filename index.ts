@@ -16,6 +16,7 @@ interface MemoryHandle {
   readString(): string;
 }
 
+// Provides access to data in Extism memory
 export class MemoryData {
   memory: MemoryHandle | null = null;
 

@@ -106,6 +106,7 @@ type Input = string | ArrayBuffer | object | undefined;
 with low-level memory access.
 
 ```ts
+// Provides access to data in Extism memory
 export class MemoryData {
   ...
 
