@@ -20,10 +20,11 @@ const NULL = new ArrayBuffer(0);
 
 // Provides access to data in Extism memory
 export class MemoryView extends DataView {
+  // @ts-ignore: TextDecoder
   static #decoder = new TextDecoder();
 
   constructor(memory?: MemoryHandle) {
-    super(memory ? memory.readBytes() : NULL)
+    super(memory ? memory.readBytes() : NULL);
   }
 
   // Returns true when the underlying memory handle is empty or undefined.
@@ -38,7 +39,7 @@ export class MemoryView extends DataView {
 
   // Get the string representation of a value stored in Extism memory
   text(): string {
-    return MemoryView.#decoder.decode(this.buffer)
+    return MemoryView.#decoder.decode(this.buffer);
   }
 
   // Read bytes from Extism memory into an ArrayBuffer
@@ -47,43 +48,67 @@ export class MemoryView extends DataView {
   }
 
   setInt8(_byteOffset: number, _value: number): void {
-    throw new Error('Cannot set values on MemoryView');
+    throw new Error("Cannot set values on MemoryView");
   }
 
   setInt16(_byteOffset: number, _value: number, _littleEndian?: boolean): void {
-    throw new Error('Cannot set values on MemoryView');
+    throw new Error("Cannot set values on MemoryView");
   }
 
   setInt32(_byteOffset: number, _value: number, _littleEndian?: boolean): void {
-    throw new Error('Cannot set values on MemoryView');
+    throw new Error("Cannot set values on MemoryView");
   }
 
   setUint8(_byteOffset: number, _value: number): void {
-    throw new Error('Cannot set values on MemoryView');
+    throw new Error("Cannot set values on MemoryView");
   }
 
-  setUint16(_byteOffset: number, _value: number, _littleEndian?: boolean): void {
-    throw new Error('Cannot set values on MemoryView');
+  setUint16(
+    _byteOffset: number,
+    _value: number,
+    _littleEndian?: boolean,
+  ): void {
+    throw new Error("Cannot set values on MemoryView");
   }
 
-  setUint32(_byteOffset: number, _value: number, _littleEndian?: boolean): void {
-    throw new Error('Cannot set values on MemoryView');
+  setUint32(
+    _byteOffset: number,
+    _value: number,
+    _littleEndian?: boolean,
+  ): void {
+    throw new Error("Cannot set values on MemoryView");
   }
 
-  setFloat32(_byteOffset: number, _value: number, _littleEndian?: boolean): void {
-    throw new Error('Cannot set values on MemoryView');
+  setFloat32(
+    _byteOffset: number,
+    _value: number,
+    _littleEndian?: boolean,
+  ): void {
+    throw new Error("Cannot set values on MemoryView");
   }
 
-  setFloat64(_byteOffset: number, _value: number, _littleEndian?: boolean): void {
-    throw new Error('Cannot set values on MemoryView');
+  setFloat64(
+    _byteOffset: number,
+    _value: number,
+    _littleEndian?: boolean,
+  ): void {
+    throw new Error("Cannot set values on MemoryView");
   }
 
-  setBigInt64(_byteOffset: number, _value: bigint, _littleEndian?: boolean): void {
-    throw new Error('Cannot set values on MemoryView');
+  setBigInt64(
+    _byteOffset: number,
+    _value: bigint,
+    _littleEndian?: boolean,
+  ): void {
+    throw new Error("Cannot set values on MemoryView");
   }
 
-  setBigUint64(_byteOffset: number, _value: bigint, _littleEndian?: boolean): void {
-    throw new Error('Cannot set values on MemoryView');
+  setBigUint64(
+    _byteOffset: number,
+    _value: bigint,
+    _littleEndian?: boolean,
+  ): void {
+    throw new Error("Cannot set values on MemoryView");
   }
 }
 
@@ -120,7 +145,7 @@ function convertInput(input: Input): MemoryHandle {
 }
 
 export class Test {
-  // call a function from the Extism plugin being tested, passing in `Input` and returning the output as `MemoryView`, which 
+  // call a function from the Extism plugin being tested, passing in `Input` and returning the output as `MemoryView`, which
   // can be used to convert the type to a JavaScript native value.
   static call(
     funcName: string,
