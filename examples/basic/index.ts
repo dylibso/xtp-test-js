@@ -42,7 +42,7 @@ export function test() {
   const total = resetOutput["total"];
   Test.assertEqual("reset plugin has vars cleared", total, 4);
 
-  // test using `MemoryData.arrayBuffer` to read an ArrayBuffer from Extism memory
+  // test using `MemoryView.arrayBuffer` to read an ArrayBuffer from Extism memory
   const outputBytes = Test.call("count_vowels", "hello, world").arrayBuffer();
   Test.assertEqual(
     "bytes from output are expected length",

@@ -17,7 +17,7 @@ interface MemoryHandle {
 }
 
 // Provides access to data in Extism memory
-export class MemoryData {
+export class MemoryView {
   memory: MemoryHandle | null = null;
 
   constructor(memory: MemoryHandle | undefined) {
@@ -91,12 +91,12 @@ function convertInput(input: Input): MemoryHandle {
 }
 
 export class Test {
-  // call a function from the Extism plugin being tested, passing in `Input` and returning the output as `MemoryData`, which 
+  // call a function from the Extism plugin being tested, passing in `Input` and returning the output as `MemoryView`, which 
   // can be used to convert the type to a JavaScript native value.
   static call(
     funcName: string,
     input: Input,
-  ): MemoryData {
+  ): MemoryView {
     // @ts-ignore: Memory
     const a = Memory.fromString(funcName);
     const b = convertInput(input);
@@ -104,12 +104,12 @@ export class Test {
     a.free();
     b.free();
     // @ts-ignore: Memory
-    return new MemoryData(Memory.find(c));
+    return new MemoryView(Memory.find(c));
   }
 
-  // read the mock test input provided by the test runner, returns `MemoryData`.
+  // read the mock test input provided by the test runner, returns `MemoryView`.
   // this input is defined in an xtp.toml file, or by the --mock-input-data or --mock-input-file flags.
-  static mockInput(): MemoryData {
+  static mockInput(): MemoryView {
     const offset = mock_input();
     if (offset === 0) {
       throw new Error(
@@ -117,7 +117,7 @@ export class Test {
       );
     }
     // @ts-ignore: Memory
-    return new MemoryData(Memory.find(offset));
+    return new MemoryView(Memory.find(offset));
   }
 
   // call a function from the Extism plugin being tested, passing in `Input` and get the number of nanoseconds spent in the function.

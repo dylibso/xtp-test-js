@@ -11,7 +11,7 @@ import { Test } from "@dylibso/xtp-test";
 
 export function test() {
   // call a function from some Extism plugin (you'll link these up in the CLI command to run the test),
-  // passing in some data and getting back `MemoryData`, which we convert to JSON using the `MemoryData.json`
+  // passing in some data and getting back `MemoryView`, which we convert to JSON using the `MemoryView.json`
   // method
   const res = Test.call("count_vowels", "some input").json();
   const count = res["count"];
@@ -52,13 +52,13 @@ behavior.
 
 ```ts
 export class Test {
-  // call a function from the Extism plugin being tested, passing in `Input` and returning the output as `MemoryData`, which 
+  // call a function from the Extism plugin being tested, passing in `Input` and returning the output as `MemoryView`, which 
   // can be used to convert the type to a JavaScript native value.
-  static call(funcName: string, input: Input): MemoryData { ... }
+  static call(funcName: string, input: Input): MemoryView { ... }
 
-  // read the mock test input provided by the test runner, returns `MemoryData`.
+  // read the mock test input provided by the test runner, returns `MemoryView`.
   // this input is defined in an xtp.toml file, or by the --mock-input-data or --mock-input-file flags.
-  static mockInput(): MemoryData { ... }
+  static mockInput(): MemoryView { ... }
   
   // Run a test group, resetting the plugin before and after the group is run.
   static group(name: string, callback: () => void) { .. }
@@ -102,12 +102,12 @@ export class Test {
 type Input = string | ArrayBuffer | object | undefined;
 ```
 
-`MemoryData` wraps an Extism memory handle, allowing you to convert between multiple types without dealing directly
+`MemoryView` wraps an Extism memory handle, allowing you to convert between multiple types without dealing directly
 with low-level memory access.
 
 ```ts
 // Provides access to data in Extism memory
-export class MemoryData {
+export class MemoryView {
   ...
 
   // Returns true if the underlying memory handle is empty or undefined.
