@@ -16,7 +16,49 @@ interface MemoryHandle {
   readString(): string;
 }
 
-type Input = string | ArrayBuffer | object;
+export class MemoryData {
+  static #decoder = new TextDecoder();
+  #memory: MemoryHandle | null = null;
+
+  constructor(memory: MemoryHandle | undefined) {
+    if (memory){
+      this.#memory = memory;
+    }
+  }
+
+  // Returns true if the underlying memory handle is empty or undefined.
+  isEmpty(): boolean {
+    return this.#memory === null || this.#memory.offset === 0;
+  }
+
+  // Get the JSON representation of a value stored in Extism memory
+  json(): any {
+    return JSON.parse(this.text());
+  }
+
+  // Get the string representation of a value stored in Extism memory
+  text(): string {
+    if (this.#memory === null){
+      return "";
+    }
+    return this.#memory.readString();
+  }
+
+  // Read bytes from Extism memory into an ArrayBuffer
+  arrayBuffer(): ArrayBuffer {
+    if (this.#memory === null){
+      return new ArrayBuffer(0);
+    }
+    return this.#memory.readBytes();
+  }
+
+  // Return the low-level memory handle
+  memoryHandle(): MemoryHandle | null {
+    return this.#memory;
+  }
+}
+
+type Input = string | ArrayBuffer | object | undefined;
 
 Host.inputBytes = function () {
   throw "Tests do not accept any input";
@@ -39,6 +81,8 @@ function convertInput(input: Input): MemoryHandle {
   } else if (input instanceof ArrayBuffer) {
     // @ts-ignore
     return Memory.fromBuffer(input);
+  } else if (input === undefined) {
+    return new Memory(0, 0);
   } else {
     // @ts-ignore
     return Memory.fromJsonObject(input);
@@ -46,11 +90,12 @@ function convertInput(input: Input): MemoryHandle {
 }
 
 export class Test {
-  // call a function from the Extism plugin being tested, passing in `Input` and returning the output as a raw `MemoryHandle`.
+  // call a function from the Extism plugin being tested, passing in `Input` and returning the output as `MemoryData`, which 
+  // can be used to convert the type to a JavaScript native value.
   static call(
     funcName: string,
     input: Input,
-  ): MemoryHandle {
+  ): MemoryData | null {
     // @ts-ignore: Memory
     const a = Memory.fromString(funcName);
     const b = convertInput(input);
@@ -58,12 +103,16 @@ export class Test {
     a.free();
     b.free();
     // @ts-ignore: Memory
-    return Memory.find(c);
+    const mem = Memory.find(c);
+    if (mem === undefined){
+      return null;
+    }
+    return new MemoryData(mem);
   }
 
-  // read the mock test input provided by the test runner, returns a `MemoryHandle`.
+  // read the mock test input provided by the test runner, returns `MemoryData`.
   // this input is defined in an xtp.toml file, or by the --mock-input-data or --mock-input-file flags.
-  static mockInput(): MemoryHandle {
+  static mockInput(): MemoryData | null {
     const offset = mock_input();
     if (offset === 0) {
       throw new Error(
@@ -71,25 +120,11 @@ export class Test {
       );
     }
     // @ts-ignore: Memory
-    return Memory.find(offset);
-  }
-
-  // read the mock test input provided by the test runner, returns an `ArrayBuffer`.
-  // this input is defined in an xtp.toml file, or by the --mock-input-data or --mock-input-file flags.
-  static mockInputBuffer(): ArrayBuffer {
-    const inputMem = Test.mockInput();
-    const buf = inputMem.readBytes();
-    inputMem.free();
-    return buf;
-  }
-
-  // read the mock test input provided by the test runner, returns an `string`.
-  // this input is defined in an xtp.toml file, or by the --mock-input-data or --mock-input-file flags.
-  static mockInputString(): string {
-    const inputMem = Test.mockInput();
-    const str = inputMem.readString();
-    inputMem.free();
-    return str;
+    const mem = Memory.find(offset);
+    if (mem === undefined){
+      return null;
+    }
+    return new MemoryData(mem);
   }
 
   // call a function from the Extism plugin being tested, passing in `Input` and get the number of nanoseconds spent in the function.
@@ -126,22 +161,6 @@ export class Test {
   // call a function from the Extism plugin being tested, passing in `Input` and get the number of seconds spent in the function.
   static timeSeconds(funcName: string, input: Input): number {
     return Test.timeNanoseconds(funcName, input) / 1e9;
-  }
-
-  // call a function from the Extism plugin being tested, passing in `Input` and returning the output as a `string`.
-  static callString(
-    funcName: string,
-    input: Input,
-  ): string {
-    return Test.call(funcName, input).readString();
-  }
-
-  // call a function from the Extism plugin being tested, passing in `Input` and returning the output as a `ArrayBuffer`.
-  static callBuffer(
-    funcName: string,
-    input: Input,
-  ): ArrayBuffer {
-    return Test.call(funcName, input).readBytes();
   }
 
   // assert that the `outcome` is true, naming the assertion with `name`, which will be used as a label in the CLI runner. The `reason` argument

@@ -11,9 +11,10 @@ import { Test } from "@dylibso/xtp-test";
 
 export function test() {
   // call a function from some Extism plugin (you'll link these up in the CLI command to run the test),
-  // passing in some data and getting back a string (`callString` is a helper for string output)
-  const res = Test.callString("count_vowels", "some input");
-  const count = JSON.parse(res)["count"];
+  // passing in some data and getting back `MemoryData`, which we convert to JSON using the `MemoryData.json`
+  // method
+  const res = Test.call("count_vowels", "some input").json();
+  const count = res["count"];
   // assert the count of the vowels is correct, giving the test case a name (which will be shown in the CLI output)
   Test.assertEqual("count_vowels of 'some input'", count, 4);
 
@@ -22,8 +23,7 @@ export function test() {
     let accumTotal = 0;
     const expectedFinalTotal = 12;
     for (let i = 0; i < 3; i++) {
-      const res = Test.callString("count_vowels", "this is a test");
-      const output = JSON.parse(res);
+      const output = Test.call("count_vowels", "this is a test").json();
       accumTotal += output.count;
       Test.assertEqual(
         `total count increased to: ${accumTotal}`,
@@ -52,27 +52,14 @@ behavior.
 
 ```ts
 export class Test {
-  // call a function from the Extism plugin being tested, passing in `Input` and returning the output as a raw `MemoryHandle`.
-  static call(funcName: string, input: Input): MemoryHandle { ... }
+  // call a function from the Extism plugin being tested, passing in `Input` and returning the output as `MemoryData`, which 
+  // can be used to convert the type to a JavaScript native value.
+  static call(funcName: string, input: Input): MemoryData { ... }
 
-  // call a function from the Extism plugin being tested, passing in `Input` and returning the output as a `string`.
-  static callString(funcName: string, input: Input): string { ... }
-
-  // call a function from the Extism plugin being tested, passing in `Input` and returning the output as a `ArrayBuffer`.
-  static callBuffer(funcName: string, input: Input): ArrayBuffer { ... }
-
-  // read the mock test input provided by the test runner, returns a `MemoryHandle`.
+  // read the mock test input provided by the test runner, returns `MemoryData`.
   // this input is defined in an xtp.toml file, or by the --mock-input-data or --mock-input-file flags.
-  static mockInput(): MemoryHandle { ... }
+  static mockInput(): MemoryData { ... }
   
-  // read the mock test input provided by the test runner, returns an `ArrayBuffer`.
-  // this input is defined in an xtp.toml file, or by the --mock-input-data or --mock-input-file flags.
-  static mockInputBuffer(): ArrayBuffer { ... }
-  
-  // read the mock test input provided by the test runner, returns an `string`.
-  // this input is defined in an xtp.toml file, or by the --mock-input-data or --mock-input-file flags.
-  static mockInputString(): string { ... }
-
   // Run a test group, resetting the plugin before and after the group is run.
   static group(name: string, callback: () => void) { .. }
 
@@ -112,19 +99,27 @@ export class Test {
 `Input` is a type to represent various kinds of function call input data.
 
 ```ts
-type Input = string | ArrayBuffer | object;
+type Input = string | ArrayBuffer | object | undefined;
 ```
 
-`MemoryHandle` is a low-level interface to Extism memory. Most times you'll use
-a helper function to work at a higher level.
+`MemoryData` wraps an Extism memory handle, allowing you to convert between multiple types without dealing directly
+with low-level memory access.
 
 ```ts
-interface MemoryHandle {
-  offset: number;
-  length: number;
-  free(): void;
-  readBytes(): ArrayBuffer;
-  readString(): string;
+export class MemoryData {
+  ...
+
+  // Returns true if the underlying memory handle is empty or undefined.
+  isEmpty(): boolean {...}
+
+  // Get the JSON representation of a value stored in Extism memory
+  json(): any { ... }
+
+  // Get the string representation of a value stored in Extism memory
+  text(): string { ... }
+
+  // Read bytes from Extism memory into an ArrayBuffer
+  arrayBuffer(): ArrayBuffer { ... }
 }
 ```
 
@@ -175,8 +170,8 @@ Your test will call function exports, but here we demonstrate calling our
 import { Test } from "@dylibso/xtp-test";
 
 export function test() {
-  const res = Test.callString("count_vowels", "some input");
-  const count = JSON.parse(res)["count"];
+  const res = Test.call("count_vowels", "some input").json();
+  const count = res["count"];
   Test.assertEqual("count_vowels of 'some input'", count, 4);
   return 0;
 }
