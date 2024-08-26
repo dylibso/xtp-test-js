@@ -107,7 +107,7 @@ with low-level memory access.
 
 ```ts
 // Provides access to data in Extism memory
-export class MemoryView {
+export class MemoryView extends DataView {
   ...
 
   // Returns true if the underlying memory handle is empty or undefined.

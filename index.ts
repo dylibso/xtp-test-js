@@ -16,19 +16,19 @@ interface MemoryHandle {
   readString(): string;
 }
 
-// Provides access to data in Extism memory
-export class MemoryView {
-  memory: MemoryHandle | null = null;
+const NULL = new ArrayBuffer(0);
 
-  constructor(memory: MemoryHandle | undefined) {
-    if (memory){
-      this.memory = memory;
-    }
+// Provides access to data in Extism memory
+export class MemoryView extends DataView {
+  static #decoder = new TextDecoder();
+
+  constructor(memory?: MemoryHandle) {
+    super(memory ? memory.readBytes() : NULL)
   }
 
-  // Returns true if the underlying memory handle is empty or undefined.
+  // Returns true when the underlying memory handle is empty or undefined.
   isEmpty(): boolean {
-    return this.memory === null || this.memory.offset === 0;
+    return this.buffer.byteLength === 0;
   }
 
   // Get the JSON representation of a value stored in Extism memory
@@ -38,23 +38,52 @@ export class MemoryView {
 
   // Get the string representation of a value stored in Extism memory
   text(): string {
-    if (this.memory === null){
-      return "";
-    }
-    return this.memory.readString();
+    return MemoryView.#decoder.decode(this.buffer)
   }
 
   // Read bytes from Extism memory into an ArrayBuffer
-  arrayBuffer(): ArrayBuffer {
-    if (this.memory === null){
-      return new ArrayBuffer(0);
-    }
-    return this.memory.readBytes();
+  arrayBuffer(): ArrayBufferLike {
+    return this.buffer;
   }
 
-  // Return the low-level memory handle
-  memoryHandle(): MemoryHandle | null {
-    return this.memory;
+  setInt8(_byteOffset: number, _value: number): void {
+    throw new Error('Cannot set values on MemoryView');
+  }
+
+  setInt16(_byteOffset: number, _value: number, _littleEndian?: boolean): void {
+    throw new Error('Cannot set values on MemoryView');
+  }
+
+  setInt32(_byteOffset: number, _value: number, _littleEndian?: boolean): void {
+    throw new Error('Cannot set values on MemoryView');
+  }
+
+  setUint8(_byteOffset: number, _value: number): void {
+    throw new Error('Cannot set values on MemoryView');
+  }
+
+  setUint16(_byteOffset: number, _value: number, _littleEndian?: boolean): void {
+    throw new Error('Cannot set values on MemoryView');
+  }
+
+  setUint32(_byteOffset: number, _value: number, _littleEndian?: boolean): void {
+    throw new Error('Cannot set values on MemoryView');
+  }
+
+  setFloat32(_byteOffset: number, _value: number, _littleEndian?: boolean): void {
+    throw new Error('Cannot set values on MemoryView');
+  }
+
+  setFloat64(_byteOffset: number, _value: number, _littleEndian?: boolean): void {
+    throw new Error('Cannot set values on MemoryView');
+  }
+
+  setBigInt64(_byteOffset: number, _value: bigint, _littleEndian?: boolean): void {
+    throw new Error('Cannot set values on MemoryView');
+  }
+
+  setBigUint64(_byteOffset: number, _value: bigint, _littleEndian?: boolean): void {
+    throw new Error('Cannot set values on MemoryView');
   }
 }
 
