@@ -17,18 +17,17 @@ interface MemoryHandle {
 }
 
 export class MemoryData {
-  static #decoder = new TextDecoder();
-  #memory: MemoryHandle | null = null;
+  memory: MemoryHandle | null = null;
 
   constructor(memory: MemoryHandle | undefined) {
     if (memory){
-      this.#memory = memory;
+      this.memory = memory;
     }
   }
 
   // Returns true if the underlying memory handle is empty or undefined.
   isEmpty(): boolean {
-    return this.#memory === null || this.#memory.offset === 0;
+    return this.memory === null || this.memory.offset === 0;
   }
 
   // Get the JSON representation of a value stored in Extism memory
@@ -38,23 +37,23 @@ export class MemoryData {
 
   // Get the string representation of a value stored in Extism memory
   text(): string {
-    if (this.#memory === null){
+    if (this.memory === null){
       return "";
     }
-    return this.#memory.readString();
+    return this.memory.readString();
   }
 
   // Read bytes from Extism memory into an ArrayBuffer
   arrayBuffer(): ArrayBuffer {
-    if (this.#memory === null){
+    if (this.memory === null){
       return new ArrayBuffer(0);
     }
-    return this.#memory.readBytes();
+    return this.memory.readBytes();
   }
 
   // Return the low-level memory handle
   memoryHandle(): MemoryHandle | null {
-    return this.#memory;
+    return this.memory;
   }
 }
 
@@ -82,7 +81,8 @@ function convertInput(input: Input): MemoryHandle {
     // @ts-ignore
     return Memory.fromBuffer(input);
   } else if (input === undefined) {
-    return new Memory(0, 0);
+    // @ts-ignore
+    return Memory.fromString("");
   } else {
     // @ts-ignore
     return Memory.fromJsonObject(input);
@@ -95,7 +95,7 @@ export class Test {
   static call(
     funcName: string,
     input: Input,
-  ): MemoryData | null {
+  ): MemoryData {
     // @ts-ignore: Memory
     const a = Memory.fromString(funcName);
     const b = convertInput(input);
@@ -103,16 +103,12 @@ export class Test {
     a.free();
     b.free();
     // @ts-ignore: Memory
-    const mem = Memory.find(c);
-    if (mem === undefined){
-      return null;
-    }
-    return new MemoryData(mem);
+    return new MemoryData(Memory.find(c));
   }
 
   // read the mock test input provided by the test runner, returns `MemoryData`.
   // this input is defined in an xtp.toml file, or by the --mock-input-data or --mock-input-file flags.
-  static mockInput(): MemoryData | null {
+  static mockInput(): MemoryData {
     const offset = mock_input();
     if (offset === 0) {
       throw new Error(
@@ -120,11 +116,7 @@ export class Test {
       );
     }
     // @ts-ignore: Memory
-    const mem = Memory.find(offset);
-    if (mem === undefined){
-      return null;
-    }
-    return new MemoryData(mem);
+    return new MemoryData(Memory.find(offset));
   }
 
   // call a function from the Extism plugin being tested, passing in `Input` and get the number of nanoseconds spent in the function.
