@@ -34,7 +34,12 @@ export class MemoryView extends DataView {
 
   // Get the JSON representation of a value stored in Extism memory
   json(): any {
-    return JSON.parse(this.text());
+    try {
+      return JSON.parse(this.text());
+    } catch (e) {
+      const text = this.text();
+      throw new Error(`Failed to parse JSON: ${text}. Error: ${e.message}`);
+    }
   }
 
   // Get the string representation of a value stored in Extism memory
