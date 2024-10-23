@@ -38,7 +38,7 @@ export class MemoryView extends DataView {
       return JSON.parse(this.text());
     } catch (e) {
       const text = this.text();
-      throw new Error(`Failed to parse JSON: ${text}. Error: ${e.message}`);
+      throw new Error(`Failed to parse JSON: ${text}. Error: ${e}`);
     }
   }
 
