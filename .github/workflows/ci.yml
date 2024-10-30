@@ -12,15 +12,14 @@ jobs:
           node-version: '20.x'
 
       - name: Install XTP CLI
-        run: curl https://static.dylibso.com/cli/install.sh | sudo sh
+        run: curl https://static.dylibso.com/cli/install.sh | bash
 
       - name: Check XTP CLI version
         run: xtp -v
 
       - name: Install Extism js-pdk
         run: |
-          curl -O https://raw.githubusercontent.com/extism/js-pdk/main/install.sh
-          sudo sh install.sh
+          curl -Ls https://raw.githubusercontent.com/extism/js-pdk/main/install.sh | bash
 
       - name: Check
         run: |
