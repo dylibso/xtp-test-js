@@ -222,7 +222,7 @@ export class Test {
     const a = Memory.fromString(name);
     // @ts-ignore: Memory
     const b = Memory.fromString(reason);
-    assert(a.offset, !!outcome, b.offset);
+    assert(a.offset, BigInt(!!outcome), b.offset);
     a.free();
     b.free();
   }
